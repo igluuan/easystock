@@ -1,10 +1,13 @@
 package br.devluan.easystock.entities;
 
-import br.devluan.easystock.dto.LoginRequest;
+import br.devluan.easystock.dto.LoginDTO.LoginRequest;
 import jakarta.persistence.*;
-import lombok.*;
+import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -29,16 +32,28 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
+    private boolean active = true;
+
+    @Column(name = "creation_at", updatable = false)
+    @CreationTimestamp
+    private LocalDateTime creationAt;
+
+    @Column(name = "update_at")
+    @UpdateTimestamp
+    private LocalDateTime updateAt;
 
     public User() {
     }
 
-    public User(UUID userId, String name, String email, String password, Set<Role> roles) {
+    public User(UUID userId, String name, String email, String password, Set<Role> roles, boolean active, LocalDateTime creationAt, LocalDateTime updateAt) {
         this.userId = userId;
         this.name = name;
         this.email = email;
         this.password = password;
         this.roles = roles;
+        this.active = active;
+        this.creationAt = creationAt;
+        this.updateAt = updateAt;
     }
 
     public UUID getUserId() {
@@ -79,6 +94,30 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public LocalDateTime getCreationAt() {
+        return creationAt;
+    }
+
+    public void setCreationAt(LocalDateTime creationAt) {
+        this.creationAt = creationAt;
+    }
+
+    public LocalDateTime getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(LocalDateTime updateAt) {
+        this.updateAt = updateAt;
     }
 
     public boolean isLoginCorrect(LoginRequest loginRequest, BCryptPasswordEncoder passwordEncoder) {

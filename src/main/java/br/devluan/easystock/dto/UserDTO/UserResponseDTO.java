@@ -5,9 +5,9 @@ import br.devluan.easystock.entities.Role;
 import java.util.UUID;
 
 public record UserResponseDTO(
-        UUID id,
+        UUID userId,
         String name,
         String email,
-        Role role
+        String role
 ) {}
 

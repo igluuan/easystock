@@ -41,6 +41,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/api/users/create").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/users").hasAuthority("SCOPE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/users/**").hasAuthority("SCOPE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/users/update/**").hasAuthority("SCOPE_ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/users/toggle/**").hasAuthority("SCOPE_ADMIN")
                                 .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())
                 .oauth2ResourceServer(oauth2 ->

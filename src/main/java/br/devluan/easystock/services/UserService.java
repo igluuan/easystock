@@ -1,5 +1,7 @@
 package br.devluan.easystock.services;
 
+import br.devluan.easystock.dto.LoginDTO.LoginRequest;
+import br.devluan.easystock.dto.LoginDTO.LoginResponse;
 import br.devluan.easystock.dto.UserDTO.UpdateUserDTO;
 import br.devluan.easystock.dto.UserDTO.UserCreationDTO;
 import br.devluan.easystock.dto.UserDTO.UserResponseDTO;
@@ -16,13 +18,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +46,7 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final UserValidator userValidator;
+    private final JwtEncoder jwtEncoder;
 
     public UserResponseDTO createUser(UserCreationDTO user){
         Role roleEmployee = roleRepository.findByName(Role.Values.EMPLOYEE.name());
@@ -55,6 +65,34 @@ public class UserService {
         }
     }
 
+    public LoginResponse authenticate(LoginRequest loginRequest) {
+        var user = userRepository.findByEmail(loginRequest.email())
+                .orElseThrow(() -> new BadCredentialsException("Invalid credentials."));
+
+        if (!user.isLoginCorrect(loginRequest, passwordEncoder)) {
+            throw new BadCredentialsException("Invalid credentials.");
+        }
+
+        var now = Instant.now();
+        var expiresIn = 300L;
+
+        var scopes = user.getRoles()
+                .stream()
+                .map(Role::getName)
+                .collect(Collectors.joining(" "));
+
+        var claims = JwtClaimsSet.builder()
+                .issuer("backend")
+                .subject(user.getUserId().toString())
+                .expiresAt(now.plusSeconds(expiresIn))
+                .claim("scope", scopes)
+                .build();
+
+        var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+
+        return new LoginResponse(jwtValue, expiresIn);
+    }
+
     public UserResponseDTO getUserById(UUID userId){
         logger.info("Fetching user by id {}", userId);
         User userExisting = userRepository.findById(userId)
@@ -67,8 +105,6 @@ public class UserService {
         Page<UserResponseDTO> userResponseDTOs = users.map(userMapper::toResponseDTO);
         return userResponseDTOs;
     }
-
-
 
     public UserResponseDTO updateUser(UUID userId, UpdateUserDTO updateUserDto) {
         userValidator.validateUserUpdate(userId, updateUserDto);
@@ -105,4 +141,6 @@ public class UserService {
 
         return userExisting.isActive();
     }
+
+
 }

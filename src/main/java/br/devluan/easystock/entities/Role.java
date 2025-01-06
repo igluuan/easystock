@@ -24,7 +24,14 @@ public class Role {
         ADMIN(1L),
         EMPLOYEE(2L);
 
+        private Long roleId;
+
         Values(Long roleId) {
+            this.roleId = roleId;
+        }
+
+        public Long getRoleId() {
+            return roleId;
         }
     }
 }

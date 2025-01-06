@@ -49,33 +49,13 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse>login(@RequestBody LoginRequest loginRequest){
-        var user = userRepository.findByEmail(loginRequest.email());
-
-        if (user.isEmpty() || !user.get().isLoginCorrect(loginRequest, passwordEncoder)) {
-            throw new BadCredentialsException("Invalid credentials.");
-        }
-
-        var now = Instant.now();
-        var expiresIn = 300L;
-        var scopes = user.get().getRoles()
-                .stream().map(Role::getName)
-                .collect(Collectors
-                        .joining(" "));
-
-        var claims = JwtClaimsSet.builder()
-                .issuer("backend")
-                .subject(user.get().getUserId().toString())
-                .expiresAt(now.plusSeconds(expiresIn))
-                .claim("scope", scopes)
-                .build();
-
-        var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-
-        return ResponseEntity.ok(new LoginResponse(jwtValue, expiresIn));
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        var response = userService.authenticate(loginRequest);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/update/{userId}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<UserResponseDTO> update(@PathVariable UUID userId, @RequestBody @Valid UpdateUserDTO updateUserDTO){
         UserResponseDTO updatedUser = userService.updateUser(userId, updateUserDTO);
         return ResponseEntity.ok(updatedUser);
@@ -97,8 +77,9 @@ public class UserController {
         return ResponseEntity.ok(userService.getUsers(page, size));
     }
 
-    @PatchMapping("/toggle")
-    public ResponseEntity<Boolean> toggleStatus(@RequestParam UUID userId){
+    @PatchMapping("/toggle/{userId}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public ResponseEntity<Boolean> toggleStatus(@PathVariable UUID userId){
         boolean updatedStatus = userService.toggleStatus(userId);
         return ResponseEntity.ok(updatedStatus);
     }

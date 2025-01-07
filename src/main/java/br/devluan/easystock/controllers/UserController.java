@@ -6,27 +6,21 @@ import br.devluan.easystock.dto.UserDTO.PageResponseDTO;
 import br.devluan.easystock.dto.UserDTO.UpdateUserDTO;
 import br.devluan.easystock.dto.UserDTO.UserCreationDTO;
 import br.devluan.easystock.dto.UserDTO.UserResponseDTO;
-import br.devluan.easystock.entities.Role;
-import br.devluan.easystock.repositories.UserRepository;
+import br.devluan.easystock.repositories.UserRepository.UserRepository;
 import br.devluan.easystock.services.UserService;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
 
@@ -35,26 +29,21 @@ public class UserController {
     private final UserRepository userRepository;
     private final JwtEncoder jwtEncoder;
 
-    public UserController(UserService userService,  BCryptPasswordEncoder passwordEncoder,
-                          UserRepository userRepository, JwtEncoder jwtEncoder) {
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-        this.jwtEncoder = jwtEncoder;
-    }
-
+    // method for create a new user
     @PostMapping("/create")
     public ResponseEntity<UserResponseDTO> create(@RequestBody @Valid UserCreationDTO userCreationDTO) {
         UserResponseDTO newUser = userService.createUser(userCreationDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
+    // method for authenticate a user and generate a JWT token
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         var response = userService.authenticate(loginRequest);
         return ResponseEntity.ok(response);
     }
 
+    // method to update a user
     @PutMapping("/update/{userId}")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<UserResponseDTO> update(@PathVariable UUID userId, @RequestBody @Valid UpdateUserDTO updateUserDTO){

@@ -1,4 +1,4 @@
-package br.devluan.easystock.entities;
+package br.devluan.easystock.entities.User;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

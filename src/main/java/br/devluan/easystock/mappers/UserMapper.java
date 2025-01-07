@@ -2,8 +2,8 @@ package br.devluan.easystock.mappers;
 
 import br.devluan.easystock.dto.UserDTO.UserCreationDTO;
 import br.devluan.easystock.dto.UserDTO.UserResponseDTO;
-import br.devluan.easystock.entities.Role;
-import br.devluan.easystock.entities.User;
+import Role;
+import br.devluan.easystock.entities.User.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

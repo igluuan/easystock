@@ -1,12 +1,10 @@
-package br.devluan.easystock.entities;
+package br.devluan.easystock.entities.Product;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Set;
 
 @Entity
 @Table(name = "products")

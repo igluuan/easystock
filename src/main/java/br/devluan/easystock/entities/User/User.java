@@ -1,8 +1,7 @@
-package br.devluan.easystock.entities;
+package br.devluan.easystock.entities.User;
 
 import br.devluan.easystock.dto.LoginDTO.LoginRequest;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

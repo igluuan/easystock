@@ -2,6 +2,7 @@ package br.devluan.easystock.controllers;
 
 import br.devluan.easystock.dto.LoginDTO.LoginRequest;
 import br.devluan.easystock.dto.LoginDTO.LoginResponse;
+import br.devluan.easystock.dto.UserDTO.PageResponseDTO;
 import br.devluan.easystock.dto.UserDTO.UpdateUserDTO;
 import br.devluan.easystock.dto.UserDTO.UserCreationDTO;
 import br.devluan.easystock.dto.UserDTO.UserResponseDTO;
@@ -70,7 +71,7 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
-    public ResponseEntity<Page<UserResponseDTO>> getUsers(
+    public ResponseEntity<PageResponseDTO<UserResponseDTO>> getUsers(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
 

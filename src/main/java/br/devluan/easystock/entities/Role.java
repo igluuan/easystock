@@ -20,6 +20,9 @@ public class Role {
 
     private String name;
 
+    public Role(String admin) {
+    }
+
     public enum Values{
         ADMIN(1L),
         EMPLOYEE(2L);

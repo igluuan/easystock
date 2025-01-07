@@ -2,6 +2,7 @@ package br.devluan.easystock.services;
 
 import br.devluan.easystock.dto.LoginDTO.LoginRequest;
 import br.devluan.easystock.dto.LoginDTO.LoginResponse;
+import br.devluan.easystock.dto.UserDTO.PageResponseDTO;
 import br.devluan.easystock.dto.UserDTO.UpdateUserDTO;
 import br.devluan.easystock.dto.UserDTO.UserCreationDTO;
 import br.devluan.easystock.dto.UserDTO.UserResponseDTO;
@@ -100,10 +101,10 @@ public class UserService {
         return userMapper.toResponseDTO(userExisting);
     }
 
-    public Page<UserResponseDTO>getUsers(int page, int size) {
+    public PageResponseDTO<UserResponseDTO> getUsers(int page, int size) {
         Page<User> users = userRepository.findAll(PageRequest.of(page, size));
         Page<UserResponseDTO> userResponseDTOs = users.map(userMapper::toResponseDTO);
-        return userResponseDTOs;
+        return PageResponseDTO.from(userResponseDTOs);
     }
 
     public UserResponseDTO updateUser(UUID userId, UpdateUserDTO updateUserDto) {

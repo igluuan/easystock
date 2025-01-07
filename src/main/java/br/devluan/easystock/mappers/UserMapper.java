@@ -6,8 +6,6 @@ import br.devluan.easystock.entities.Role;
 import br.devluan.easystock.entities.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
-import org.springframework.context.annotation.Bean;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {

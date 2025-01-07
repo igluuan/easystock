@@ -1,0 +1,25 @@
+meta {
+  name: Toggle Status
+  type: http
+  seq: 7
+}
+
+patch {
+  url: http://localhost:8080/api/users/toggle/d41e1851-15b6-4b66-a00f-e68ebb14a852
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "email":"joao@example.com"
+  }
+}
+
+vars:post-response {
+  accessToken: res.body.accessToken
+}

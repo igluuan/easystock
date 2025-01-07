@@ -1,6 +1,6 @@
-package br.devluan.easystock.repositories.UserRepository;
+package br.devluan.easystock.repositories;
 
-import Role;
+import br.devluan.easystock.entities.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {

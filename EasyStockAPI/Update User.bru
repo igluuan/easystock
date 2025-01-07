@@ -1,0 +1,25 @@
+meta {
+  name: Update User
+  type: http
+  seq: 6
+}
+
+put {
+  url: http://localhost:8080/api/users/update/d41e1851-15b6-4b66-a00f-e68ebb14a852
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "name":"joaoS"
+  }
+}
+
+vars:post-response {
+  accessToken: res.body.accessToken
+}

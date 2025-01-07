@@ -6,7 +6,7 @@ import br.devluan.easystock.dto.UserDTO.PageResponseDTO;
 import br.devluan.easystock.dto.UserDTO.UpdateUserDTO;
 import br.devluan.easystock.dto.UserDTO.UserCreationDTO;
 import br.devluan.easystock.dto.UserDTO.UserResponseDTO;
-import br.devluan.easystock.repositories.UserRepository.UserRepository;
+import br.devluan.easystock.repositories.UserRepository;
 import br.devluan.easystock.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

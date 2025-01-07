@@ -3,7 +3,7 @@ import br.devluan.easystock.dto.UserDTO.UpdateUserDTO;
 import br.devluan.easystock.dto.UserDTO.UserCreationDTO;
 import br.devluan.easystock.exceptions.EmailAlreadyExistsException;
 import br.devluan.easystock.exceptions.UserErrorExceptions;
-import br.devluan.easystock.repositories.UserRepository.UserRepository;
+import br.devluan.easystock.repositories.UserRepository;
 import jakarta.validation.ValidationException;
 import org.springframework.stereotype.Component;
 import java.util.Optional;

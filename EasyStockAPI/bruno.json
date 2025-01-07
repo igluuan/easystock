@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "EasyStock",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

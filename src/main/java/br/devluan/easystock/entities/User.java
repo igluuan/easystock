@@ -1,4 +1,4 @@
-package br.devluan.easystock.entities.User;
+package br.devluan.easystock.entities;
 
 import br.devluan.easystock.dto.LoginDTO.LoginRequest;
 import jakarta.persistence.*;

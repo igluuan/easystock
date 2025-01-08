@@ -1,11 +1,8 @@
 package br.devluan.easystock.dto.ProductDTO;
 
-public record ProductCreationDTO(
+public record ProductUpdateDTO(
         String name,
         Double price,
         Integer stockQuantity,
-        Integer minQuantity,
-        Long categoryId
-) implements ProductBaseDTO {
-
-}
+        Integer minQuantity
+) implements ProductBaseDTO {}

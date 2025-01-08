@@ -5,6 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "products")
@@ -33,4 +37,12 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    @Column(name = "creation_date", updatable = false)
+    @CreationTimestamp
+    private LocalDateTime creationDate;
+
+    @Column(name = "update_date")
+    @UpdateTimestamp
+    private LocalDateTime updateDate;
 }

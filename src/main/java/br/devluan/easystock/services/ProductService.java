@@ -5,17 +5,23 @@ import br.devluan.easystock.dto.ProductDTO.ProductResponseDTO;
 import br.devluan.easystock.dto.UserDTO.PageResponseDTO;
 import br.devluan.easystock.entities.Category;
 import br.devluan.easystock.entities.Product;
+import br.devluan.easystock.exceptions.BusinessException;
 import br.devluan.easystock.exceptions.ResourceNotFoundException;
 import br.devluan.easystock.mappers.ProductMapper;
 import br.devluan.easystock.repositories.CategoryRepository;
 import br.devluan.easystock.repositories.ProductRepository;
-import jakarta.transaction.Transactional;
+import br.devluan.easystock.utils.ProductValidator;
+import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -26,31 +32,95 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductMapper productMapper;
+    private final ProductValidator validator;
 
     public ProductResponseDTO createProduct(ProductCreationDTO productDTO){
+        validator.validateProductCreation(productDTO);
         logger.info("Creating new product {}", productDTO.name());
         Category category = categoryRepository.findById(productDTO.categoryId())
                 .orElseThrow(()-> new ResourceNotFoundException("Category not found"));
+        try {
+            Product product = productMapper.toEntity(productDTO);
+            product.setCategory(category);
+            Product savedProduct = productRepository.save(product);
+            logger.info("New product created {}", savedProduct.getName());
+            return productMapper.toResponseDTO(savedProduct);
+        } catch (DataIntegrityViolationException e) {
+            logger.error("Error creating product: {}", e.getMessage());
+            throw new BusinessException("Error creating product. Possible unique data breach.");
+        }
 
-        Product product = productMapper.toEntity(productDTO);
-        product.setCategory(category);
 
-        Product savedProduct = productRepository.save(product);
-        logger.info("New product created {}", savedProduct.getName());
-
-        return productMapper.toResponseDTO(savedProduct);
     }
 
-    public ProductResponseDTO getById(Long ProductId){
-        logger.info("Retrieving product by id {}", ProductId);
-        Product existingProduct = productRepository.findById(ProductId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-        return productMapper.toResponseDTO(existingProduct);
+    @Transactional(readOnly = true)
+    public ProductResponseDTO getById(Long productId) {
+        return productMapper.toResponseDTO(findProductById(productId));
     }
 
+    @Transactional(readOnly = true)
     public PageResponseDTO<ProductResponseDTO> getAllProducts(int page, int size){
-        Page<Product> products = productRepository.findAll(PageRequest.of(page,size));
-        Page<ProductResponseDTO> productResponseDTOS = products.map(productMapper::toResponseDTO);
-        return PageResponseDTO.from(productResponseDTOS);
+        validatePaginationParams(page, size);
+        try {
+            Page<Product> products = productRepository.findAll(
+                    PageRequest.of(page, size, Sort.by("createdAt").descending())
+            );
+            return PageResponseDTO.from(products.map(productMapper::toResponseDTO));
+        } catch (Exception e) {
+            logger.error("Error searching for products: {}", e.getMessage());
+            throw new BusinessException("Error retrieving product list");
+        }
+    }
+
+    public PageResponseDTO<ProductResponseDTO> getProductsByCategory(Long categoryId, int page, int size){
+        validatePaginationParams(page, size);
+        logger.info("Retrieving products by category id {}", categoryId);
+        Category category = findCategoryById(categoryId);
+        try {
+            Page<Product> products = productRepository.findByCategory(
+                    category,
+                    PageRequest.of(page, size, Sort.by("createdAt").descending())
+            );
+            return PageResponseDTO.from(products.map(productMapper::toResponseDTO));
+        }catch (Exception e) {
+            logger.error("Error searching for products by category: {}", e.getMessage());
+            throw new BusinessException("Error retrieving products from category");
+        }
+    }
+
+    public void deactivateProduct(Long productId){
+        logger.info("Deactivating product by id {}", productId);
+        Product product = findProductById(productId);
+        try {
+            product.setActive(false);
+            product.setUpdateDate(LocalDateTime.now());
+            productRepository.save(product);
+            logger.info("Product successfully deactivated. ID: {}", productId);
+        } catch (Exception e) {
+            logger.error("Error deactivating product: {}", e.getMessage());
+            throw new BusinessException("Error deactivating product");
+        }
+    }
+
+    private Product findProductById(Long productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> {
+                    logger.warn("Product not found. ID: {}", productId);
+                    return new ResourceNotFoundException("Product not found");
+                });
+    }
+
+    private Category findCategoryById(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> {
+                    logger.warn("Category not found. ID: {}", categoryId);
+                    return new ResourceNotFoundException("Category not found");
+                });
+    }
+
+    private void validatePaginationParams(int page, int size) {
+        if (page < 0 || size <= 0 || size > 100) {
+            throw new IllegalArgumentException("Invalid pagination parameters");
+        }
     }
 }

@@ -37,4 +37,15 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProducts(page, size));
     }
 
+    @GetMapping("/categories/{categoryId}")
+    public ResponseEntity<PageResponseDTO<ProductResponseDTO>> getProductsByCategory(@PathVariable Long categoryId,
+                                                                                     @RequestParam(value = "page", defaultValue = "0") int page,
+                                                                                     @RequestParam(value = "size", defaultValue = "10") int size){
+        return ResponseEntity.ok(productService.getProductsByCategory(categoryId, page, size));
+    }
+    @PatchMapping("/disable/{productId}")
+    public ResponseEntity<Void> deactivateProduct(@PathVariable Long productId){
+        productService.deactivateProduct(productId);
+        return ResponseEntity.ok().build();
+    }
 }

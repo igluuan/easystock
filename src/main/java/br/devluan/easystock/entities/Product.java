@@ -28,7 +28,7 @@ public class Product {
     @Column(name = "min_quantity")
     private Integer minQuantity;
 
-    private boolean active;
+    private boolean active = true;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)

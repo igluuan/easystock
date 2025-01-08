@@ -1,11 +1,11 @@
 meta {
-  name: Toggle Status
+  name: Get User
   type: http
-  seq: 7
+  seq: 4
 }
 
-patch {
-  url: http://localhost:8080/api/users/toggle/d41e1851-15b6-4b66-a00f-e68ebb14a852
+get {
+  url: http://localhost:8080/api/users/d41e1851-15b6-4b66-a00f-e68ebb14a852
   body: json
   auth: bearer
 }
@@ -16,7 +16,8 @@ auth:bearer {
 
 body:json {
   {
-    "email":"joao@example.com"
+    "email":"luan@example.com",
+    "password":"password123"
   }
 }
 

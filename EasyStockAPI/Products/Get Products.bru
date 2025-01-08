@@ -1,0 +1,25 @@
+meta {
+  name: Get Products
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://localhost:8080/api/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "name":"Ball",
+    "price": 5.99,
+    "stockQuantity": 35,
+    "minQuantity": 5,
+    "categoryId": 3
+  }
+}

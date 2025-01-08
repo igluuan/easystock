@@ -1,11 +1,11 @@
 package br.devluan.easystock.controllers;
 
-import br.devluan.easystock.dto.LoginDTO.LoginRequest;
-import br.devluan.easystock.dto.LoginDTO.LoginResponse;
-import br.devluan.easystock.dto.UserDTO.PageResponseDTO;
-import br.devluan.easystock.dto.UserDTO.UpdateUserDTO;
-import br.devluan.easystock.dto.UserDTO.UserCreationDTO;
-import br.devluan.easystock.dto.UserDTO.UserResponseDTO;
+import br.devluan.easystock.dto.request.LoginRequest;
+import br.devluan.easystock.dto.response.LoginResponse;
+import br.devluan.easystock.dto.response.PageResponseDTO;
+import br.devluan.easystock.dto.request.UpdateUserDTO;
+import br.devluan.easystock.dto.request.UserCreationDTO;
+import br.devluan.easystock.dto.response.UserResponseDTO;
 import br.devluan.easystock.repositories.UserRepository;
 import br.devluan.easystock.services.UserService;
 import jakarta.validation.Valid;

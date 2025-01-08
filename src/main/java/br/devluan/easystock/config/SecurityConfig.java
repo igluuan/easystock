@@ -51,6 +51,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/categories/**").permitAll()
                         .requestMatchers(HttpMethod.PATCH, "/api/products/disable/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/products/update/**").permitAll()
                                 .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())
                 .oauth2ResourceServer(oauth2 ->

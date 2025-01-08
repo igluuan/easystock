@@ -1,4 +1,4 @@
-package br.devluan.easystock.entities;
+package br.devluan.easystock.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -38,11 +38,11 @@ public class Product {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @Column(name = "creation_date", updatable = false)
+    @Column(name = "createdAt", updatable = false)
     @CreationTimestamp
-    private LocalDateTime creationDate;
+    private LocalDateTime createdAt;
 
-    @Column(name = "update_date")
+    @Column(name = "updatedAt")
     @UpdateTimestamp
-    private LocalDateTime updateDate;
+    private LocalDateTime updatedAt;
 }

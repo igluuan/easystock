@@ -1,16 +1,17 @@
 package br.devluan.easystock.services;
 
-import br.devluan.easystock.dto.ProductDTO.ProductCreationDTO;
-import br.devluan.easystock.dto.ProductDTO.ProductResponseDTO;
-import br.devluan.easystock.dto.UserDTO.PageResponseDTO;
-import br.devluan.easystock.entities.Category;
-import br.devluan.easystock.entities.Product;
-import br.devluan.easystock.exceptions.BusinessException;
-import br.devluan.easystock.exceptions.ResourceNotFoundException;
+import br.devluan.easystock.dto.request.ProductCreationDTO;
+import br.devluan.easystock.dto.request.ProductUpdateDTO;
+import br.devluan.easystock.dto.response.ProductResponseDTO;
+import br.devluan.easystock.dto.response.PageResponseDTO;
+import br.devluan.easystock.domain.entities.Category;
+import br.devluan.easystock.domain.entities.Product;
+import br.devluan.easystock.domain.exceptions.ProductExceptions.BusinessException;
+import br.devluan.easystock.domain.exceptions.ProductExceptions.ResourceNotFoundException;
 import br.devluan.easystock.mappers.ProductMapper;
 import br.devluan.easystock.repositories.CategoryRepository;
 import br.devluan.easystock.repositories.ProductRepository;
-import br.devluan.easystock.utils.ProductValidator;
+import br.devluan.easystock.services.utils.ProductValidator;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -53,6 +55,26 @@ public class ProductService {
 
     }
 
+    public ProductResponseDTO updateQuantity(Long productId, ProductUpdateDTO productUpdateDTO) {
+        Optional<Product> optionalProduct = Optional.ofNullable(findProductById(productId));
+
+        Product product = optionalProduct.orElseThrow(() -> new BusinessException("Product not found"));
+
+        validator.validateProductUpdate(productUpdateDTO, productId);
+
+        try {
+            Integer updatedQuantity = product.getStockQuantity() + productUpdateDTO.stockQuantity();
+            System.out.println(updatedQuantity);
+            product.setStockQuantity(updatedQuantity);
+            productRepository.save(product);
+            logger.info("Updated stock quantity for product ID {}. New quantity: {}", productId, updatedQuantity);
+            return productMapper.toResponseDTO(product);
+        } catch (DataIntegrityViolationException e) {
+            logger.error("Error updating product ID {}: {}", productId, e.getMessage());
+            throw new BusinessException("Error updating product. Possible unique data breach.");
+        }
+    }
+
     @Transactional(readOnly = true)
     public ProductResponseDTO getById(Long productId) {
         return productMapper.toResponseDTO(findProductById(productId));
@@ -72,6 +94,7 @@ public class ProductService {
         }
     }
 
+    @Transactional(readOnly = true)
     public PageResponseDTO<ProductResponseDTO> getProductsByCategory(Long categoryId, int page, int size){
         validatePaginationParams(page, size);
         logger.info("Retrieving products by category id {}", categoryId);
@@ -93,7 +116,7 @@ public class ProductService {
         Product product = findProductById(productId);
         try {
             product.setActive(false);
-            product.setUpdateDate(LocalDateTime.now());
+            product.setUpdatedAt(LocalDateTime.now());
             productRepository.save(product);
             logger.info("Product successfully deactivated. ID: {}", productId);
         } catch (Exception e) {

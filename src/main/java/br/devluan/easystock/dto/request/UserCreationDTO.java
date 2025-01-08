@@ -1,4 +1,4 @@
-package br.devluan.easystock.dto.UserDTO;
+package br.devluan.easystock.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

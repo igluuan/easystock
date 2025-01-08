@@ -1,6 +1,6 @@
-package br.devluan.easystock.entities;
+package br.devluan.easystock.domain.entities;
 
-import br.devluan.easystock.dto.LoginDTO.LoginRequest;
+import br.devluan.easystock.dto.request.LoginRequest;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;

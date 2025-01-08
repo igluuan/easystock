@@ -1,4 +1,4 @@
-package br.devluan.easystock.dto.ProductDTO;
+package br.devluan.easystock.dto.response;
 
 public record ProductResponseDTO(
         Long id,

@@ -1,14 +1,14 @@
 package br.devluan.easystock.controllers;
 
-import br.devluan.easystock.dto.ProductDTO.ProductCreationDTO;
-import br.devluan.easystock.dto.ProductDTO.ProductResponseDTO;
-import br.devluan.easystock.dto.UserDTO.PageResponseDTO;
+import br.devluan.easystock.dto.request.ProductCreationDTO;
+import br.devluan.easystock.dto.request.ProductUpdateDTO;
+import br.devluan.easystock.dto.response.ProductResponseDTO;
+import br.devluan.easystock.dto.response.PageResponseDTO;
 import br.devluan.easystock.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,6 +23,14 @@ public class ProductController {
     public ResponseEntity<ProductResponseDTO>create(@RequestBody ProductCreationDTO productCreationDTO){
         ProductResponseDTO newProduct = productService.createProduct(productCreationDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(newProduct);
+    }
+
+    @PutMapping("/update/{productId}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    public ResponseEntity<ProductResponseDTO> updateQuantity(@PathVariable Long productId,
+                                                             @RequestBody ProductUpdateDTO dto){
+        ProductResponseDTO updatedProduct = productService.updateQuantity(productId, dto);
+        return ResponseEntity.ok(updatedProduct);
     }
 
     @GetMapping("/{productId}")

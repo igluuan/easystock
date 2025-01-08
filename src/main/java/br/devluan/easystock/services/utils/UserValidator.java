@@ -1,8 +1,8 @@
-package br.devluan.easystock.utils;
-import br.devluan.easystock.dto.UserDTO.UpdateUserDTO;
-import br.devluan.easystock.dto.UserDTO.UserCreationDTO;
-import br.devluan.easystock.exceptions.EmailAlreadyExistsException;
-import br.devluan.easystock.exceptions.UserErrorExceptions;
+package br.devluan.easystock.services.utils;
+import br.devluan.easystock.dto.request.UpdateUserDTO;
+import br.devluan.easystock.dto.request.UserCreationDTO;
+import br.devluan.easystock.domain.exceptions.UserExceptions.EmailAlreadyExistsException;
+import br.devluan.easystock.domain.exceptions.UserExceptions.UserErrorExceptions;
 import br.devluan.easystock.repositories.UserRepository;
 import jakarta.validation.ValidationException;
 import org.springframework.stereotype.Component;
@@ -74,7 +74,7 @@ public class UserValidator {
         userRepository.findByEmail(email)
                 .filter(user -> !user.getUserId().equals(currentUserId))
                 .ifPresent(user -> {
-                    throw new EmailAlreadyExistsException("Email already in use: " + email);
+                    throw new EmailAlreadyExistsException("Email already in use");
                 });
     }
 

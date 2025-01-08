@@ -1,4 +1,4 @@
-package br.devluan.easystock.exceptions;
+package br.devluan.easystock.domain.exceptions.ProductExceptions;
 
 public class BusinessException extends RuntimeException {
     public BusinessException(String message) {

@@ -1,4 +1,4 @@
-package br.devluan.easystock.dto.LoginDTO;
+package br.devluan.easystock.dto.request;
 
 public record LoginRequest(
         String email,

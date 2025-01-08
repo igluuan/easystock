@@ -1,4 +1,4 @@
-package br.devluan.easystock.exceptions;
+package br.devluan.easystock.domain.exceptions.UserExceptions;
 
 public class EmailAlreadyExistsException extends RuntimeException {
     public EmailAlreadyExistsException(String message) {

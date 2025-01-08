@@ -1,4 +1,4 @@
-package br.devluan.easystock.dto.ProductDTO;
+package br.devluan.easystock.dto.base;
 
 public interface ProductBaseDTO {
     String name();

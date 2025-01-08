@@ -1,4 +1,4 @@
-package br.devluan.easystock.dto.UserDTO;
+package br.devluan.easystock.dto.response;
 
 import java.util.UUID;
 

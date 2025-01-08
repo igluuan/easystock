@@ -1,16 +1,15 @@
-package br.devluan.easystock.utils;
+package br.devluan.easystock.services.utils;
 
 
-import br.devluan.easystock.dto.ProductDTO.ProductBaseDTO;
-import br.devluan.easystock.dto.ProductDTO.ProductCreationDTO;
-import br.devluan.easystock.dto.ProductDTO.ProductUpdateDTO;
-import br.devluan.easystock.exceptions.ProductValidationException;
+import br.devluan.easystock.dto.base.ProductBaseDTO;
+import br.devluan.easystock.dto.request.ProductCreationDTO;
+import br.devluan.easystock.dto.request.ProductUpdateDTO;
+import br.devluan.easystock.domain.exceptions.ProductExceptions.ProductValidationException;
 import br.devluan.easystock.repositories.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
-import java.math.BigDecimal;
 
 @Component
 @RequiredArgsConstructor

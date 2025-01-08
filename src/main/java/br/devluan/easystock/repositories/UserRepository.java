@@ -1,6 +1,6 @@
 package br.devluan.easystock.repositories;
 
-import br.devluan.easystock.entities.User;
+import br.devluan.easystock.domain.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

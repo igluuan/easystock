@@ -1,4 +1,4 @@
-package br.devluan.easystock.exceptions;
+package br.devluan.easystock.domain.exceptions.UserExceptions;
 
 public class UserErrorExceptions extends RuntimeException {
     public UserErrorExceptions(String message) {

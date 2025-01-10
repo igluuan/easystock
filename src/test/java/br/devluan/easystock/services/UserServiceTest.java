@@ -1,18 +1,19 @@
 package br.devluan.easystock.services;
 
+import br.devluan.easystock.domain.user.service.UserService;
 import br.devluan.easystock.dto.request.LoginRequest;
 import br.devluan.easystock.dto.response.LoginResponse;
 import br.devluan.easystock.dto.response.PageResponseDTO;
 import br.devluan.easystock.dto.request.UpdateUserDTO;
 import br.devluan.easystock.dto.request.UserCreationDTO;
 import br.devluan.easystock.dto.response.UserResponseDTO;
-import br.devluan.easystock.domain.entities.Role;
-import br.devluan.easystock.domain.entities.User;
-import br.devluan.easystock.domain.exceptions.UserExceptions.UserErrorExceptions;
-import br.devluan.easystock.mappers.UserMapper;
-import br.devluan.easystock.repositories.RoleRepository;
-import br.devluan.easystock.repositories.UserRepository;
-import br.devluan.easystock.services.utils.UserValidator;
+import br.devluan.easystock.domain.user.entity.Role;
+import br.devluan.easystock.domain.user.entity.User;
+import br.devluan.easystock.application.exceptions.UserExceptions.UserErrorExceptions;
+import br.devluan.easystock.domain.user.mapper.UserMapper;
+import br.devluan.easystock.domain.user.repository.RoleRepository;
+import br.devluan.easystock.domain.user.repository.UserRepository;
+import br.devluan.easystock.common.validator.UserValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
